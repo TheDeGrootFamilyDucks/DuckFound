@@ -61,8 +61,22 @@
         }
     </style>
     <script>
+        // Set the secret code here
+        const secretCode = "DvDeULPsgDKRnWOidWYdfMBWmyagnFDaxcHGqgaAYeLixWGLmf";  // This is the code you want to set
+
+        // Function to pre-fill the form and validate the secret code
         function prefillForm() {
             const params = new URLSearchParams(window.location.search);
+            const urlSecret = params.get("secretDuckifyer");
+
+            // Check if the secret code in the URL matches the set code
+            if (urlSecret !== secretCode) {
+                alert("Invalid Secret Code!");
+                window.location.href = "/";  // Redirect to home if the secret code is wrong
+                return;
+            }
+
+            // If valid, prefill any other form data here if needed
             document.getElementById("cruiseLine").value = params.get("cruiseLine") || "";
             document.getElementById("itinerary").value = params.get("itinerary") || "";
             document.getElementById("ship").value = params.get("ship") || "";
@@ -70,25 +84,22 @@
             document.getElementById("message").value = params.get("message") || "";
         }
 
+        // Send the form data to Discord
         function sendToDiscord(event) {
             event.preventDefault();
+
             const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your actual webhook URL
-            
             const cruiseLine = document.getElementById("cruiseLine").value;
             const itinerary = document.getElementById("itinerary").value;
             const ship = document.getElementById("ship").value;
             const location = document.getElementById("location").value;
             const message = document.getElementById("message").value;
-            
+
             const payload = {
-                content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship:** ${ship}\n**Location:** ${location}\n**Message:** ${message}`
+                content: `🦆 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship Name:** ${ship}\n**Location:** ${location}\n**Message:** ${message}`
             };
 
-            sendPayload(payload);
-        }
-
-        function sendPayload(payload) {
-            fetch("YOUR_DISCORD_WEBHOOK_URL", {
+            fetch(webhookURL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
@@ -103,7 +114,7 @@
                 alert("Error sending data to Discord.");
             });
         }
-        
+
         window.onload = prefillForm;
     </script>
 </head>
@@ -116,7 +127,7 @@
         <label for="itinerary">Itinerary:</label>
         <input type="text" id="itinerary" name="itinerary" required>
         
-        <label for="ship">Cruise Ship:</label>
+        <label for="ship">Ship Name:</label>
         <input type="text" id="ship" name="ship" required>
         
         <label for="location">Where did you find it?</label>
@@ -124,6 +135,9 @@
         
         <label for="message">Leave a message:</label>
         <input type="text" id="message" name="message">
+        
+        <label for="secretDuckifyer">Secret Duckifyer (Ship Identifier):</label>
+        <input type="text" id="secretDuckifyer" name="secretDuckifyer" required>
         
         <button type="submit">Submit</button>
     </form>
