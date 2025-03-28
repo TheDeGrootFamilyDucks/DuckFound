@@ -66,7 +66,8 @@
             document.getElementById("cruiseLine").value = params.get("cruiseLine") || "";
             document.getElementById("itinerary").value = params.get("itinerary") || "";
             document.getElementById("ship").value = params.get("ship") || "";
-            document.getElementById("duck").value = params.get("duck") || "";
+            document.getElementById("location").value = params.get("location") || "";
+            document.getElementById("message").value = params.get("message") || "";
         }
 
         function sendToDiscord(event) {
@@ -76,27 +77,14 @@
             const cruiseLine = document.getElementById("cruiseLine").value;
             const itinerary = document.getElementById("itinerary").value;
             const ship = document.getElementById("ship").value;
-            const duck = document.getElementById("duck").value;
             const location = document.getElementById("location").value;
             const message = document.getElementById("message").value;
-            const imageInput = document.getElementById("image").files[0];
             
-            if (imageInput) {
-                const reader = new FileReader();
-                reader.readAsDataURL(imageInput);
-                reader.onload = function () {
-                    const payload = {
-                        content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`,
-                        embeds: [{ image: { url: reader.result } }]
-                    };
-                    sendPayload(payload);
-                };
-            } else {
-                const payload = {
-                    content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`
-                };
-                sendPayload(payload);
-            }
+            const payload = {
+                content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship:** ${ship}\n**Location:** ${location}\n**Message:** ${message}`
+            };
+
+            sendPayload(payload);
         }
 
         function sendPayload(payload) {
@@ -131,17 +119,11 @@
         <label for="ship">Cruise Ship:</label>
         <input type="text" id="ship" name="ship" required>
         
-        <label for="duck">Duck Type:</label>
-        <input type="text" id="duck" name="duck" required>
-        
         <label for="location">Where did you find it?</label>
         <input type="text" id="location" name="location" required>
         
         <label for="message">Leave a message:</label>
         <input type="text" id="message" name="message">
-        
-        <label for="image">Upload a Picture:</label>
-        <input type="file" id="image" name="image" accept="image/*">
         
         <button type="submit">Submit</button>
     </form>
