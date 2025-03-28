@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cruising Ducks Log</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #FFEB3B;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6c/Rubber_duck.png');
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: 150px;
+        }
+        h1 {
+            color: #D84315;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            background-color: #FFF176;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            font-weight: bold;
+            color: #D84315;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: #D84315;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #BF360C;
+        }
+    </style>
+    <script>
+        function prefillForm() {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById("ship").value = params.get("ship") || "";
+            document.getElementById("duck").value = params.get("duck") || "";
+        }
+
+        function sendToDiscord(event) {
+            event.preventDefault();
+            const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your actual webhook URL
+            
+            const ship = document.getElementById("ship").value;
+            const duck = document.getElementById("duck").value;
+            const location = document.getElementById("location").value;
+            const message = document.getElementById("message").value;
+            const imageInput = document.getElementById("image").files[0];
+            
+            if (imageInput) {
+                const reader = new FileReader();
+                reader.readAsDataURL(imageInput);
+                reader.onload = function () {
+                    const payload = {
+                        content: `🐥 **Cruising Duck Found!** 🛳️\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`,
+                        embeds: [{ image: { url: reader.result } }]
+                    };
+                    sendPayload(payload);
+                };
+            } else {
+                const payload = {
+                    content: `🐥 **Cruising Duck Found!** 🛳️\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`
+                };
+                sendPayload(payload);
+            }
+        }
+
+        function sendPayload(payload) {
+            fetch("YOUR_DISCORD_WEBHOOK_URL", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(response => {
+                if (response.ok) {
+                    alert("Duck logged successfully!");
+                } else {
+                    alert("Error sending data to Discord.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("Error sending data to Discord.");
+            });
+        }
+        
+        window.onload = prefillForm;
+    </script>
+</head>
+<body>
+    <h1>🦆 Log Your Found Duck! 🦆</h1>
+    <form onsubmit="sendToDiscord(event)">
+        <label for="ship">Cruise Ship:</label>
+        <input type="text" id="ship" name="ship" required>
+        
+        <label for="duck">Duck Type:</label>
+        <input type="text" id="duck" name="duck" required>
+        
+        <label for="location">Where did you find it?</label>
+        <input type="text" id="location" name="location" required>
+        
+        <label for="message">Leave a message:</label>
+        <input type="text" id="message" name="message">
+        
+        <label for="image">Upload a Picture:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
