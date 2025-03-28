@@ -6,48 +6,58 @@
     <title>Cruising Ducks Log</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Poppins", sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #FFEB3B;
+            background: linear-gradient(180deg, #FFD54F, #FFB300);
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6c/Rubber_duck.png');
             background-repeat: no-repeat;
             background-position: center top;
-            background-size: 150px;
+            background-size: 120px;
         }
         h1 {
             color: #D84315;
-            font-size: 28px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 32px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
         }
         form {
-            max-width: 400px;
+            max-width: 500px;
             margin: auto;
             display: flex;
             flex-direction: column;
-            background-color: #FFF176;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
         }
         label {
             font-weight: bold;
             color: #D84315;
+            margin-top: 10px;
         }
         input, button {
             margin: 10px 0;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
-            border-radius: 5px;
-            border: none;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: #D84315;
+            outline: none;
         }
         button {
             background-color: #D84315;
             color: white;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
         }
         button:hover {
             background-color: #BF360C;
+            transform: scale(1.05);
         }
     </style>
     <script>
