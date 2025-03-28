@@ -61,34 +61,31 @@
         }
     </style>
     <script>
-        // Set the secret code here
-        const secretCode = "DvDeULPsgDKRnWOidWYdfMBWmyagnFDaxcHGqgaAYeLixWGLmf";  // This is the code you want to set
+        // Check URL for the secret code
+        const urlParams = new URLSearchParams(window.location.search);
+        const secretCode = urlParams.get('secretDuckifyer');  // The code you put in the URL
 
-        // Function to pre-fill the form and validate the secret code
-        function prefillForm() {
-            const params = new URLSearchParams(window.location.search);
-            const urlSecret = params.get("secretDuckifyer");
-
-            // Check if the secret code in the URL matches the set code
-            if (urlSecret !== secretCode) {
-                alert("Invalid Secret Code!");
-                window.location.href = "/";  // Redirect to home if the secret code is wrong
-                return;
+        window.onload = function() {
+            // If the secret code exists in the URL, set it in the input field
+            if (secretCode) {
+                document.getElementById("secretDuckifyer").value = secretCode;
             }
-
-            // If valid, prefill any other form data here if needed
-            document.getElementById("cruiseLine").value = params.get("cruiseLine") || "";
-            document.getElementById("itinerary").value = params.get("itinerary") || "";
-            document.getElementById("ship").value = params.get("ship") || "";
-            document.getElementById("location").value = params.get("location") || "";
-            document.getElementById("message").value = params.get("message") || "";
         }
 
-        // Send the form data to Discord
+        // Check the entered secret code against the one in the URL
+        function validateSecretCode(event) {
+            const enteredCode = document.getElementById("secretDuckifyer").value;
+
+            if (enteredCode !== secretCode) {
+                alert("Incorrect Secret Duckifyer! Please check the code in the URL.");
+                event.preventDefault();
+            }
+        }
+
         function sendToDiscord(event) {
             event.preventDefault();
-
             const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your actual webhook URL
+
             const cruiseLine = document.getElementById("cruiseLine").value;
             const itinerary = document.getElementById("itinerary").value;
             const ship = document.getElementById("ship").value;
@@ -96,9 +93,10 @@
             const message = document.getElementById("message").value;
 
             const payload = {
-                content: `🦆 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship Name:** ${ship}\n**Location:** ${location}\n**Message:** ${message}`
+                content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship Name:** ${ship}\n**Location:** ${location}\n**Message:** ${message}`
             };
 
+            // Sending the data to Discord
             fetch(webhookURL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -114,13 +112,11 @@
                 alert("Error sending data to Discord.");
             });
         }
-
-        window.onload = prefillForm;
     </script>
 </head>
 <body>
     <h1>🦆 Log Your Found Duck! 🦆</h1>
-    <form onsubmit="sendToDiscord(event)">
+    <form onsubmit="validateSecretCode(event); sendToDiscord(event)">
         <label for="cruiseLine">Cruise Line:</label>
         <input type="text" id="cruiseLine" name="cruiseLine" required>
         
@@ -138,7 +134,7 @@
         
         <label for="secretDuckifyer">Secret Duckifyer (Ship Identifier):</label>
         <input type="text" id="secretDuckifyer" name="secretDuckifyer" required>
-        
+
         <button type="submit">Submit</button>
     </form>
 </body>
