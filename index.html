@@ -63,6 +63,8 @@
     <script>
         function prefillForm() {
             const params = new URLSearchParams(window.location.search);
+            document.getElementById("cruiseLine").value = params.get("cruiseLine") || "";
+            document.getElementById("itinerary").value = params.get("itinerary") || "";
             document.getElementById("ship").value = params.get("ship") || "";
             document.getElementById("duck").value = params.get("duck") || "";
         }
@@ -71,6 +73,8 @@
             event.preventDefault();
             const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your actual webhook URL
             
+            const cruiseLine = document.getElementById("cruiseLine").value;
+            const itinerary = document.getElementById("itinerary").value;
             const ship = document.getElementById("ship").value;
             const duck = document.getElementById("duck").value;
             const location = document.getElementById("location").value;
@@ -82,14 +86,14 @@
                 reader.readAsDataURL(imageInput);
                 reader.onload = function () {
                     const payload = {
-                        content: `🐥 **Cruising Duck Found!** 🛳️\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`,
+                        content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`,
                         embeds: [{ image: { url: reader.result } }]
                     };
                     sendPayload(payload);
                 };
             } else {
                 const payload = {
-                    content: `🐥 **Cruising Duck Found!** 🛳️\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`
+                    content: `🐥 **Cruising Duck Found!** 🛳️\n**Cruise Line:** ${cruiseLine}\n**Itinerary:** ${itinerary}\n**Ship:** ${ship}\n**Duck Type:** ${duck}\n**Location:** ${location}\n**Message:** ${message}`
                 };
                 sendPayload(payload);
             }
@@ -118,6 +122,12 @@
 <body>
     <h1>🦆 Log Your Found Duck! 🦆</h1>
     <form onsubmit="sendToDiscord(event)">
+        <label for="cruiseLine">Cruise Line:</label>
+        <input type="text" id="cruiseLine" name="cruiseLine" required>
+        
+        <label for="itinerary">Itinerary:</label>
+        <input type="text" id="itinerary" name="itinerary" required>
+        
         <label for="ship">Cruise Ship:</label>
         <input type="text" id="ship" name="ship" required>
         
